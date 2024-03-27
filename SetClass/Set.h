@@ -29,14 +29,27 @@ public:
 	Set(T* arr, int n);
 	Set<T>& operator=(const Set<T>& other);
 	Set<T>& add(const T& x);
-	Set<T>& addRange(T* arr, int n);
+	Set<T>& addRange(T* arr, int n)
+	{
+		for (int i = 0; i < n; ++i) this->add(arr[i]);
+		return *this;
+	}
 	Set<T>& remove(const T& x);
 	int size() const { return this->size; }
 	bool contain(const T& x);
 	Set<T> set_union(const Set<T>& other);
 	Set<T> intersect(const Set<T>& other);
 	Set<T> difference(const Set<T>& other);
-	void printOn(std::ostream& os) const;
+	void printOn(std::ostream& os) const
+	{
+		os << "Set{";
+		Node* curr = head;
+		while (curr != nullptr)
+		{
+			os << ' ' << curr->value;
+		}
+		os << " }\n";
+	}
 };
 
 template<typename T>
@@ -74,5 +87,10 @@ inline Set<T>& Set<T>::add(const T& x)
 	Node phantom(0, head);
 	while (phantom->next != nullptr && phantom->next->value < x)
 		phantom->next = phantom->next->next;
-	phantom->next = new Node(x, phantom->next);
+	if (phantom->next == nullptr || x < phantom->next->value)
+	{
+		phantom->next = new Node(x, phantom->next);
+		++size;
+	}
+	return *this;
 }
