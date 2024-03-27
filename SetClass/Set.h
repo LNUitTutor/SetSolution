@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <stdexcept>
+
 template <typename T>
 class Set
 {
@@ -108,6 +110,20 @@ inline Set<T>& Set<T>::add(const T& x)
 }
 
 template<typename T>
+inline Set<T>& Set<T>::remove(const T& x)
+{
+	Node* curr = head;
+	while (curr->next != nullptr && curr->next->value < x)
+		curr = curr->next;
+	if (curr->next == nullptr || x < curr->next->value)
+		throw std::runtime_error("No such element in the Set");
+	Node* victim = curr->next;
+	curr->next = victim->next;
+	delete victim;
+	return *this;
+}
+
+template<typename T>
 inline Set<T> Set<T>::set_union(const Set<T>& other)
 {
 	Set<T> C;
@@ -146,6 +162,65 @@ inline Set<T> Set<T>::set_union(const Set<T>& other)
 	{
 		c->next = new Node(b->value);
 		b = b->next;
+		c = c->next;
+		++C.size;
+	}
+	return C;
+}
+
+template<typename T>
+inline Set<T> Set<T>::intersect(const Set<T>& other)
+{
+	Set<T> C;
+	Node* c = C.head;
+	Node* a = this->head->next;
+	Node* b = other.head->next;
+	while (a != nullptr && b != nullptr)
+	{
+		if (a->value < b->value) a = a->next;
+		else if (b->value < a->value) b = b->next;
+		else
+		{
+			c->next = new Node(a->value);
+			a = a->next;
+			b = b->next;
+			c = c->next;
+			++C.size;
+		}
+	}
+	return C;
+}
+
+template<typename T>
+inline Set<T> Set<T>::difference(const Set<T>& other)
+{
+	Set<T> C;
+	Node* c = C.head;
+	Node* a = this->head->next;
+	Node* b = other.head->next;
+	while (a != nullptr && b != nullptr)
+	{
+		if (a->value < b->value)
+		{
+			c->next = new Node(a->value);
+			a = a->next;
+			c = c->next;
+			++C.size;
+		}
+		else if (b->value < a->value)
+		{
+			b = b->next;
+		}
+		else
+		{
+			a = a->next;
+			b = b->next;
+		}
+	}
+	while (a != nullptr)
+	{
+		c->next = new Node(a->value);
+		a = a->next;
 		c = c->next;
 		++C.size;
 	}
