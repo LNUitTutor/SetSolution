@@ -35,7 +35,13 @@ public:
 	}
 	Set<T>& remove(const T& x);
 	int Size() const { return this->size; }
-	bool contain(const T& x);
+	bool contain(const T& x)
+	{
+		Node* curr = head->next;
+		while (curr != nullptr && 
+			(curr->value < x || x < curr->value)) curr = curr->next;
+		return curr != nullptr;
+	}
 	Set<T> set_union(const Set<T>& other);
 	Set<T> intersect(const Set<T>& other);
 	Set<T> difference(const Set<T>& other);
@@ -99,4 +105,49 @@ inline Set<T>& Set<T>::add(const T& x)
 		++size;
 	}
 	return *this;
+}
+
+template<typename T>
+inline Set<T> Set<T>::set_union(const Set<T>& other)
+{
+	Set<T> C;
+	Node* c = C.head;
+	Node* a = this->head->next;
+	Node* b = other.head->next;
+	while (a != nullptr && b != nullptr)
+	{
+		if (a->value < b->value)
+		{
+			c->next = new Node(a->value);
+			a = a->next;
+		}
+		else if (b->value < a->value)
+		{
+			c->next = new Node(b->value);
+			b = b->next;
+		}
+		else
+		{
+			c->next = new Node(a->value);
+			a = a->next;
+			b = b->next;
+		}
+		c = c->next;
+		++C.size;
+	}
+	while (a != nullptr)
+	{
+		c->next = new Node(a->value);
+		a = a->next;
+		c = c->next;
+		++C.size;
+	}
+	while (b != nullptr)
+	{
+		c->next = new Node(b->value);
+		b = b->next;
+		c = c->next;
+		++C.size;
+	}
+	return C;
 }
