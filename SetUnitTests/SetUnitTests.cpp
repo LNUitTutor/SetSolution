@@ -83,4 +83,45 @@ namespace SetUnitTests
 			delete[] e;
 		}
 	};
+	TEST_CLASS(SetAddRemoveTests)
+	{
+	public:
+		TEST_METHOD(TestAddAnElement)
+		{
+			Set<int> A(1);
+			Assert::AreEqual(1, A.size());
+			Assert::IsTrue(A.contain(1));
+			Assert::IsFalse(A.contain(5));
+			Assert::IsFalse(A.contain(4));
+			A.add(4);
+			Assert::AreEqual(2, A.size());
+			Assert::IsFalse(A.contain(5));
+			Assert::IsTrue(A.contain(4));
+			A.add(5);
+			Assert::AreEqual(3, A.size());
+			Assert::IsTrue(A.contain(5));
+			Assert::IsTrue(A.contain(4));
+			Assert::IsTrue(A.contain(1));
+			A.add(5).add(5).add(1);
+			Assert::AreEqual(3, A.size());
+		}
+		TEST_METHOD(TestAddRange)
+		{
+			Set<char> A;
+			A.addRange("abracadabra", 11);
+			Assert::AreEqual(5, A.size());
+			char c[] = "abcdr";
+			char* d = A.to_array();
+			Assert::IsTrue(AreEqual(c, d, 5));
+			delete[] d;
+		}
+		/*TEST_METHOD(TestRemove)
+		{
+
+		}
+		TEST_METHOD(TestClear)
+		{
+
+		}*/
+	};
 }
