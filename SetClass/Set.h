@@ -13,17 +13,16 @@ private:
 	Node* head;
 	int size;
 public:
-	Set(): head(nullptr), size(0) { }
+	Set(): head(new Node(T())), size(0) { }
 	Set(const Set<T>& other);
-	Set(const T& x): head(new Node(x)), size(1) { }
+	Set(const T& x): head(new Node(T(), new Node(x))), size(1){ }
 	~Set()
 	{
-		Node* victim = head;
-		while (victim != nullptr)
+		while (head != nullptr)
 		{
+			Node* victim = head;
 			head = head->next;
 			delete victim;
-			victim = head;
 		}
 	}
 	Set(T* arr, int n);
@@ -35,7 +34,7 @@ public:
 		return *this;
 	}
 	Set<T>& remove(const T& x);
-	int size() const { return this->size; }
+	int Size() const { return this->size; }
 	bool contain(const T& x);
 	Set<T> set_union(const Set<T>& other);
 	Set<T> intersect(const Set<T>& other);
@@ -43,24 +42,31 @@ public:
 	void printOn(std::ostream& os) const
 	{
 		os << "Set{";
-		Node* curr = head;
+		Node* curr = head->next;
 		while (curr != nullptr)
 		{
 			os << ' ' << curr->value;
+			curr = curr->next;
 		}
-		os << " }\n";
+		os << " }";
 	}
 };
 
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const Set<T>& S)
+{
+	S.printOn(os);
+	return os;
+}
+
 template<typename T>
-inline Set<T>::Set(const Set<T>& other): head(nullptr), size(other.size)
+inline Set<T>::Set(const Set<T>& other): head(new Node(T())), size(other.size)
 {
 	if (size > 0)
 	{
-		head = new Node(other.head->value);
 		Node* curr = head;
 		Node* source = other.head->next;
-		while (next != nullptr)
+		while (source != nullptr)
 		{
 			curr->next = new Node(source->value);
 			curr = curr->next;
@@ -70,7 +76,7 @@ inline Set<T>::Set(const Set<T>& other): head(nullptr), size(other.size)
 }
 
 template<typename T>
-inline Set<T>::Set(T* arr, int n): head(nullptr), size(0)
+inline Set<T>::Set(T* arr, int n): head(new Node(T())), size(0)
 {
 	for (int i = 0; i < n; ++i) this->add(arr[i]);
 }
@@ -84,12 +90,12 @@ inline Set<T>& Set<T>::operator=(const Set<T>& other)
 template<typename T>
 inline Set<T>& Set<T>::add(const T& x)
 {
-	Node phantom(0, head);
-	while (phantom->next != nullptr && phantom->next->value < x)
-		phantom->next = phantom->next->next;
-	if (phantom->next == nullptr || x < phantom->next->value)
+	Node* curr = head;
+	while (curr->next != nullptr && curr->next->value < x)
+		curr = curr->next;
+	if (curr->next == nullptr || x < curr->next->value)
 	{
-		phantom->next = new Node(x, phantom->next);
+		curr->next = new Node(x, curr->next);
 		++size;
 	}
 	return *this;
