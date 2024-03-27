@@ -70,6 +70,13 @@ public:
 		}
 		os << " }";
 	}
+	T* to_array() const
+	{
+		T* arr = new T[size];
+		Node* curr = head->next;
+		for (int i = 0; i < size; ++i, curr = curr->next) arr[i] = curr->value;
+		return arr;
+	}
 };
 
 template <typename T>

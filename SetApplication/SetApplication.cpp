@@ -21,6 +21,10 @@ int main()
     int a[5] = { 1, 8, 1, 5, 0 };
     Set<int> A(a, 5);
     std::cout << " A = " << A << " has size " << A.Size() << '\n';
+    int* d = A.to_array();
+    for (int i = 0; i < A.Size(); ++i) std::cout << ' ' << d[i];
+    std::cout << '\n';
+    delete[] d;
     int b[4] = { 2, 8, 3, 8 };
     Set<int> B(b, 4);
     std::cout << " B = " << B << " has size " << B.Size() << '\n';
