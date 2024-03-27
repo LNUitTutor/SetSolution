@@ -36,6 +36,18 @@ public:
 		return *this;
 	}
 	Set<T>& remove(const T& x);
+	Set<T>& clear()
+	{
+		Node*& curr = head->next;
+		while (curr != nullptr)
+		{
+			Node* victim = curr;
+			curr = curr->next;
+			delete victim;
+		}
+		size = 0;
+		return *this;
+	}
 	int Size() const { return this->size; }
 	bool contain(const T& x)
 	{
@@ -120,6 +132,7 @@ inline Set<T>& Set<T>::remove(const T& x)
 	Node* victim = curr->next;
 	curr->next = victim->next;
 	delete victim;
+	--size;
 	return *this;
 }
 

@@ -25,5 +25,29 @@ int main()
     Set<int> B(b, 4);
     std::cout << " B = " << B << " has size " << B.Size() << '\n';
     Set<int> C = A.set_union(B);
-    std::cout << " C = " << C << " has size " << C.Size() << '\n';
+    std::cout << " A+B = " << C << " has size " << C.Size() << '\n';
+    A.remove(1);
+    std::cout << " A = " << A << " has size " << A.Size() << '\n';
+    A.remove(0);
+    std::cout << " A = " << A << " has size " << A.Size() << '\n';
+    A.remove(8);
+    std::cout << " A = " << A << " has size " << A.Size() << '\n';
+    try
+    {
+        A.remove(10);
+    }
+    catch (const std::runtime_error& ex)
+    {
+        std::cout << ex.what() << '\n';
+    }
+    for (int i = 3; i < 37; i += 5) A.add(i);
+    std::cout << " A = " << A << " has size " << A.Size() << '\n';
+    Set<int> P = A.intersect(B);
+    std::cout << " A*B = " << P << " has size " << P.Size() << '\n';
+    Set<int> R = A.intersect(C);
+    std::cout << " A*C = " << R << " has size " << R.Size() << '\n';
+    Set<int> Q = A.difference(B.add(33));
+    std::cout << " A-B-{33} = " << Q << " has size " << Q.Size() << '\n';
+    Q.clear();
+    std::cout << " Q = " << Q << " has size " << Q.Size() << '\n';
 }
