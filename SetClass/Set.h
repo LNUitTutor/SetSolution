@@ -13,11 +13,11 @@ private:
 		Node(T v = T(), Node* n = nullptr): value(v), next(n) { }
 	};
 	Node* head;
-	int size;
+	int _size;
 public:
-	Set(): head(new Node(T())), size(0) { }
+	Set(): head(new Node(T())), _size(0) { }
 	Set(const Set<T>& other);
-	Set(const T& x): head(new Node(T(), new Node(x))), size(1){ }
+	Set(const T& x): head(new Node(T(), new Node(x))), _size(1){ }
 	~Set()
 	{
 		while (head != nullptr)
@@ -45,10 +45,10 @@ public:
 			curr = curr->next;
 			delete victim;
 		}
-		size = 0;
+		_size = 0;
 		return *this;
 	}
-	int Size() const { return this->size; }
+	int size() const { return this->_size; }
 	bool contain(const T& x)
 	{
 		Node* curr = head->next;
@@ -70,6 +70,13 @@ public:
 		}
 		os << " }";
 	}
+	T* to_array() const
+	{
+		T* arr = new T[_size];
+		Node* curr = head->next;
+		for (int i = 0; i < _size; ++i, curr = curr->next) arr[i] = curr->value;
+		return arr;
+	}
 };
 
 template <typename T>
@@ -80,9 +87,9 @@ std::ostream& operator<<(std::ostream& os, const Set<T>& S)
 }
 
 template<typename T>
-inline Set<T>::Set(const Set<T>& other): head(new Node(T())), size(other.size)
+inline Set<T>::Set(const Set<T>& other): head(new Node(T())), _size(other._size)
 {
-	if (size > 0)
+	if (_size > 0)
 	{
 		Node* curr = head;
 		Node* source = other.head->next;
@@ -96,7 +103,7 @@ inline Set<T>::Set(const Set<T>& other): head(new Node(T())), size(other.size)
 }
 
 template<typename T>
-inline Set<T>::Set(T* arr, int n): head(new Node(T())), size(0)
+inline Set<T>::Set(T* arr, int n): head(new Node(T())), _size(0)
 {
 	for (int i = 0; i < n; ++i) this->add(arr[i]);
 }
@@ -116,7 +123,7 @@ inline Set<T>& Set<T>::add(const T& x)
 	if (curr->next == nullptr || x < curr->next->value)
 	{
 		curr->next = new Node(x, curr->next);
-		++size;
+		++_size;
 	}
 	return *this;
 }
@@ -132,7 +139,7 @@ inline Set<T>& Set<T>::remove(const T& x)
 	Node* victim = curr->next;
 	curr->next = victim->next;
 	delete victim;
-	--size;
+	--_size;
 	return *this;
 }
 
@@ -162,21 +169,21 @@ inline Set<T> Set<T>::set_union(const Set<T>& other)
 			b = b->next;
 		}
 		c = c->next;
-		++C.size;
+		++C._size;
 	}
 	while (a != nullptr)
 	{
 		c->next = new Node(a->value);
 		a = a->next;
 		c = c->next;
-		++C.size;
+		++C._size;
 	}
 	while (b != nullptr)
 	{
 		c->next = new Node(b->value);
 		b = b->next;
 		c = c->next;
-		++C.size;
+		++C._size;
 	}
 	return C;
 }
@@ -198,7 +205,7 @@ inline Set<T> Set<T>::intersect(const Set<T>& other)
 			a = a->next;
 			b = b->next;
 			c = c->next;
-			++C.size;
+			++C._size;
 		}
 	}
 	return C;
@@ -218,7 +225,7 @@ inline Set<T> Set<T>::difference(const Set<T>& other)
 			c->next = new Node(a->value);
 			a = a->next;
 			c = c->next;
-			++C.size;
+			++C._size;
 		}
 		else if (b->value < a->value)
 		{
@@ -235,7 +242,7 @@ inline Set<T> Set<T>::difference(const Set<T>& other)
 		c->next = new Node(a->value);
 		a = a->next;
 		c = c->next;
-		++C.size;
+		++C._size;
 	}
 	return C;
 }
