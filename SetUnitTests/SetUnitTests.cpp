@@ -1,14 +1,11 @@
 ﻿#include "pch.h"
 #include "CppUnitTest.h"
 #include "..\SetClass\Set.h"
+#include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 /*
 	Set<T>& operator=(const Set<T>& other);
-	Set<T>& add(const T& x);
-	Set<T>& addRange(T* arr, int n)
-	Set<T>& remove(const T& x);
-	Set<T>& clear()
 	int Size() const { return this->size; }
 	bool contain(const T& x)
 	Set<T> set_union(const Set<T>& other);
@@ -114,14 +111,51 @@ namespace SetUnitTests
 			char* d = A.to_array();
 			Assert::IsTrue(AreEqual(c, d, 5));
 			delete[] d;
+			std::string words[] = { "Hello", "world", "now", "Hello", "everybody" };
+			Set<std::string> W;
+			W.addRange(words, 5);
+			Assert::AreEqual(4, W.size());
+			Assert::IsTrue(W.contain("now"));
 		}
-		/*TEST_METHOD(TestRemove)
+		TEST_METHOD(TestRemove)
 		{
-
+			Set<char> A;
+			A.addRange("abracadabra", 11);
+			Assert::AreEqual(5, A.size());
+			A.remove('a');
+			Assert::AreEqual(4, A.size());
+			Assert::IsFalse(A.contain('a'));
+			A.remove('d');
+			Assert::AreEqual(3, A.size());
+			Assert::IsFalse(A.contain('d'));
+			A.remove('r');
+			Assert::AreEqual(2, A.size());
+			Assert::IsFalse(A.contain('r'));
+			Assert::ExpectException<std::runtime_error>([&A] { A.remove('a'); });
+			Assert::ExpectException<std::runtime_error>([&A] { A.remove('f'); });
+			Assert::AreEqual(2, A.size());
 		}
 		TEST_METHOD(TestClear)
 		{
+			Set<double> A;
+			Assert::AreEqual(0, A.size());
+			A.clear();
+			Assert::AreEqual(0, A.size());
+			A.add(1.5).add(2.25).add(0.5).add(1.).add(0.25).add(5);
+			Assert::AreEqual(6, A.size());
+			A.clear();
+			Assert::AreEqual(0, A.size());
+			A.add(1.5).add(2.25);
+			Assert::AreEqual(2, A.size());
+			Assert::IsTrue(A.contain(1.5));
+			Assert::IsTrue(A.contain(2.25));
+		}
+	};
+	TEST_CLASS(TestOperation)
+	{
+		TEST_METHOD(Test)
+		{
 
-		}*/
+		}
 	};
 }
