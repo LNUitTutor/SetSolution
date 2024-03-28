@@ -4,16 +4,7 @@
 #include <string>
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
-/*
-	Set<T>& operator=(const Set<T>& other);
-	int Size() const { return this->size; }
-	bool contain(const T& x)
-	Set<T> set_union(const Set<T>& other);
-	Set<T> intersect(const Set<T>& other);
-	Set<T> difference(const Set<T>& other);
-	void printOn(std::ostream& os) const
-	T* to_array() const
-*/
+
 template <typename T>
 bool AreEqual(T* expected, T* actual, int size)
 {
@@ -21,6 +12,7 @@ bool AreEqual(T* expected, T* actual, int size)
 		if (expected[i] != actual[i]) return false;
 	return true;
 }
+
 namespace SetUnitTests
 {
 	TEST_CLASS(SetCreationTests)
@@ -153,9 +145,95 @@ namespace SetUnitTests
 	};
 	TEST_CLASS(TestOperation)
 	{
-		TEST_METHOD(Test)
+		TEST_METHOD(TestUnion)
+		{
+			int a[] = { 1, 3, 5, 7, 9 };
+			int b[] = { 1, 2, 3, 4, 5 };
+			int c[] = { 4, 5, 6, 7, 8, 9, 10 };
+			Set<int> A(a, 5);
+			Set<int> B(b, 5);
+			Set<int> C(c, sizeof c / sizeof * c);
+			Set<int> D;
+			Set<int> AUB = A.set_union(B);
+			Set<int> BUA = B.set_union(A);
+			int d[] = { 1, 2, 3, 4, 5, 7, 9 };
+			int* ab = AUB.to_array();
+			int* ba = BUA.to_array();
+			Assert::IsTrue(AreEqual(d, ab, 7));
+			Assert::IsTrue(AreEqual(d, ba, 7));
+			delete[] ab; delete[] ba;
+			Set<int> AUD = A.set_union(D);
+			ab = AUD.to_array();
+			Assert::IsTrue(AreEqual(a, ab, 5));
+			Set<int> BUC = B.set_union(C);
+			ba = BUC.to_array();
+			for (int i = 0; i < 10; ++i) Assert::AreEqual(i + 1, ba[i]);
+			delete[] ab; delete[] ba;
+		}
+		TEST_METHOD(TestIntersection)
+		{
+			int a[] = { 1, 3, 5, 7, 9 };
+			int b[] = { 1, 2, 3, 4, 5 };
+			int c[] = { 4, 5, 6, 7, 8, 9, 10 };
+			Set<int> A(a, 5);
+			Set<int> B(b, 5);
+			Set<int> C(c, sizeof c / sizeof * c);
+			Set<int> D;
+			Set<int> AOB = A.intersect(B);
+			Set<int> BOA = B.intersect(A);
+			int d[] = { 1, 3, 5 };
+			int* ab = AOB.to_array();
+			int* ba = BOA.to_array();
+			Assert::IsTrue(AreEqual(d, ab, 3));
+			Assert::IsTrue(AreEqual(d, ba, 3));
+			delete[] ab; delete[] ba;
+			Set<int> AOD = A.intersect(D);
+			Assert::AreEqual(0, AOD.size());
+			Set<int> BOC = B.intersect(C);
+			Assert::AreEqual(2, BOC.size());
+			Assert::IsTrue(BOC.contain(4));
+			Assert::IsTrue(BOC.contain(5));
+		}
+		TEST_METHOD(TestDifference)
 		{
 
+			int a[] = { 1, 3, 5, 7, 9 };
+			int b[] = { 1, 2, 3, 4, 5 };
+			int c[] = { 4, 5, 6, 7, 8, 9, 10 };
+			Set<int> A(a, 5);
+			Set<int> B(b, 5);
+			Set<int> C(c, sizeof c / sizeof * c);
+			Set<int> D;
+			Set<int> A_B = A.difference(B);
+			Set<int> B_A = B.difference(A);
+			int d[] = { 7, 9, 2, 4 };
+			int* ab = A_B.to_array();
+			int* ba = B_A.to_array();
+			Assert::IsTrue(AreEqual(d, ab, 2));
+			Assert::IsTrue(AreEqual(d + 2, ba, 2));
+			delete[] ab; delete[] ba;
+			Set<int> A_D = A.difference(D);
+			ab = A_D.to_array();
+			Assert::IsTrue(AreEqual(a, ab, 5));
+			Set<int> B_C = B.difference(C);
+			ba = B_C.to_array();
+			for (int i = 0; i < 3; ++i) Assert::AreEqual(i + 1, ba[i]);
+			delete[] ab; delete[] ba;
+		}
+		TEST_METHOD(TestPrint)
+		{
+			Set<int> A;
+			std::ostringstream os;
+			A.printOn(os);
+			Assert::AreEqual("Set{ }", os.str().c_str());
+			os.seekp(0);
+			A.add(1).add(2).add(3).add(4).printOn(os);
+			Assert::AreEqual("Set{ 1 2 3 4 }", os.str().c_str());
+			os.seekp(0);
+			Set<std::string> B;
+			B.add("Hello").add("World").add("We").add("Are").add("Going");
+			B.printOn(os);
+			Assert::AreEqual("Set{ Are Going Hello We World }", os.str().c_str());
 		}
 	};
 }
