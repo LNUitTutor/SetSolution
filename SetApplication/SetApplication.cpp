@@ -18,7 +18,7 @@ int main()
     //    std::cout << x << " belongs " << A.contain(x) << '\n';
     //}
     //std::cout << 10 << " belongs " << A.contain(10) << '\n';
-    int a[5] = { 1, 8, 1, 5, 0 };
+    /*int a[5] = {1, 8, 1, 5, 0};
     Set<int> A(a, 5);
     std::cout << " A = " << A << " has size " << A.size() << '\n';
     int* d = A.to_array();
@@ -58,6 +58,15 @@ int main()
     Set<int> C1(c, sizeof c / sizeof * c);
     std::cout << " C1 = " << C1 << " has size " << C1.size() << '\n';
     int* e = C1.to_array();
-    for (int i = 1; i <= 10; ++i) std::cout << e[i-1];
+    for (int i = 1; i <= 10; ++i) std::cout << e[i - 1]; std::cout << '\n';
     delete[] e;
+    Set<int>::Iterator start = C1.begin();
+    Set<int>::Iterator stop = C1.end();
+    while (start != stop)
+    {
+        std::cout << *start << ' ';
+        ++start;
+    }
+    std::cout << '\n';*/
+
 }
