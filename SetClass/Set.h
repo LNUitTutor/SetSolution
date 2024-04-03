@@ -77,6 +77,29 @@ public:
 		for (int i = 0; i < _size; ++i, curr = curr->next) arr[i] = curr->value;
 		return arr;
 	}
+	class Iterator
+	{
+	private:
+		Node* ptr;
+	public:
+		Iterator(Node* p = nullptr): ptr(p){}
+		bool operator==(const Iterator& other) const
+		{
+			return this->ptr == other.ptr;
+		}
+		bool operator!=(const Iterator& other) const
+		{
+			return this->ptr != other.ptr;
+		}
+		Iterator& operator++()
+		{
+			ptr = ptr->next;
+			return *this;
+		}
+		T operator*() const { return ptr->value; }
+	};
+	Iterator begin() { return Iterator(head->next); }
+	Iterator end() { return Iterator(); }
 };
 
 template <typename T>
