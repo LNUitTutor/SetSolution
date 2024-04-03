@@ -1,31 +1,7 @@
 ﻿#include <iostream>
-#include <string>
+#include "Classes.h"
 #include "..\SetClass\Set.h"
-struct Person
-{
-    std::string name;
-    int age;
-    Person(std::string s="", int n=0) :name(s), age(n) {}
-};
-std::ostream& operator<<(std::ostream& os, const Person& p)
-{
-    os << '(' << p.name << ' ' << p.age << ')';
-    return os;
-}
-struct AgeCompare
-{
-    bool operator()(const Person& a, const Person& b)
-    {
-        return a.age < b.age;
-    }
-};
-struct NameCompare
-{
-    bool operator()(const Person& a, const Person& b)
-    {
-        return a.name < b.name;
-    }
-};
+
 int main()
 {
     //Set<int> A;
@@ -86,9 +62,11 @@ int main()
     for (int i = 1; i <= 10; ++i) std::cout << e[i-1];
     std::cout << '\n';
     delete[] e;
-    Person p[] = { Person("Ivan",19), Person("Maria",18), Person("Adam",35) };
-    Set<Person, NameCompare> F(p, 3);
+    Person p[] = { Person("Ivan",19), Person("Maria",18), Person("Adam",35),
+        {"Steph", 42 }, { "Silvie", 40 }};
+    const int pn = sizeof p / sizeof * p;
+    Set<Person, NameCompare> F(p, pn);
     std::cout << " F = " << F << " has size " << F.size() << '\n';
-    Set<Person, AgeCompare> G(p, 3);
+    Set<Person, AgeCompare> G(p, pn);
     std::cout << " G = " << G << " has size " << G.size() << '\n';
 }
