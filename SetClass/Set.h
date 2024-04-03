@@ -98,7 +98,7 @@ public:
 		}
 		T operator*() const { return ptr->value; }
 	};
-	Iterator begin() { return Iterator(head); }
+	Iterator begin() { return Iterator(head->next); }
 	Iterator end() { return Iterator(); }
 };
 

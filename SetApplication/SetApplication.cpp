@@ -69,4 +69,24 @@ int main()
     }
     std::cout << '\n';*/
 
+    std::cout << "Input the upper integer: ";
+    unsigned n; std::cin >> n;
+    Set<unsigned> prime;
+    for (unsigned i = 2; i <= n; ++i) prime.add(i);
+    Set<unsigned>::Iterator start = prime.begin();
+    Set<unsigned>::Iterator stop = prime.end();
+    while (start != stop)
+    {
+        unsigned member = *start;
+        unsigned adder = member;
+        member += adder;
+        while (member <= n)
+        {
+            try { prime.remove(member); }
+            catch (...) {}
+            member += adder;
+        }
+        ++start;
+    }
+    std::cout << "prime = " << prime << '\n';
 }
