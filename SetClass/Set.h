@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdexcept>
 #include <functional>
+#include <initializer_list>
 
 template <typename T, typename comparer = std::less<T>>
 class Set
@@ -33,6 +34,10 @@ public:
 		}
 	}
 	Set(const T& x): head(new Node(T(), new Node(x))), _size(1){ }
+	Set(const std::initializer_list<T>& list): head(new Node(T())), _size(0)
+	{
+		for (const T& x : list) this->add(x);
+	}
 	~Set()
 	{
 		while (head != nullptr)

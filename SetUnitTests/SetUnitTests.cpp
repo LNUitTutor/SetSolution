@@ -71,6 +71,13 @@ namespace SetUnitTests
 			Assert::IsTrue(AreEqual(b, e, 5));
 			delete[] e;
 		}
+		TEST_METHOD(TestInitlistCreation)
+		{
+			Set<int> A{ 1,2,3,4,5,4,3,2,1 };
+			Assert::AreEqual(5, A.size());
+			int* a = A.to_array();
+			for (int i = 0; i < 5; ++i) Assert::AreEqual(i + 1, a[i]);
+		}
 	};
 	TEST_CLASS(SetAddRemoveTests)
 	{
