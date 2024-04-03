@@ -1,6 +1,33 @@
 ﻿#include <iostream>
+#include <string>
 #include "..\SetClass\Set.h"
-
+struct Person
+{
+    std::string name;
+    int age;
+    Person(std::string s="", int n=0) :name(s), age(n) {}
+};
+std::ostream& operator<<(std::ostream& os, const Person& p)
+{
+    os << '(' << p.name << ' ' << p.age << ')';
+    return os;
+}
+template <typename T>
+struct AgeCompare
+{
+    bool operator()(const T& a, const T& b)
+    {
+        return a.age < b.age;
+    }
+};
+template <typename T>
+struct NameCompare
+{
+    bool operator()(const T& a, const T& b)
+    {
+        return a.name < b.name;
+    }
+};
 int main()
 {
     //Set<int> A;
@@ -60,4 +87,7 @@ int main()
     int* e = C1.to_array();
     for (int i = 1; i <= 10; ++i) std::cout << e[i-1];
     delete[] e;
+    Person p[] = { Person("Ivan",19), Person("Maria",18), Person("Adam",35) };
+    Set<Person, NameCompare> F(p, 3);
+    std::cout << " F = " << F << " has size " << F.size() << '\n';
 }
