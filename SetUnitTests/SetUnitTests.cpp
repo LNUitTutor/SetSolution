@@ -236,4 +236,22 @@ namespace SetUnitTests
 			Assert::AreEqual("Set{ Are Going Hello We World }", os.str().c_str());
 		}
 	};
+	TEST_CLASS(SetIteratorTest)
+	{
+		TEST_METHOD(TestIteratorEmpty)
+		{
+			Set<char> A;
+			Set<char>::Iterator it = A.begin();
+			Assert::IsTrue(A.end() == it);
+		}
+		TEST_METHOD(TestIterator)
+		{
+			Set<int> A;
+			const int n = 10;
+			for (int i = 1; i <= n; ++i) A.add(i);
+			Set<int>::Iterator it = A.begin();
+			for (int i = 1; i <= n; ++i, ++it) Assert::AreEqual(i, *it);
+			Assert::IsTrue(A.end() == it);
+		}
+	};
 }

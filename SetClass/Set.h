@@ -3,8 +3,7 @@
 #include <stdexcept>
 #include <functional>
 
-template <typename T,
-	template <typename T> typename comparer = std::less>
+template <typename T, typename comparer = std::less<T>>
 class Set
 {
 private:
@@ -16,7 +15,7 @@ private:
 	};
 	Node* head;
 	int _size;
-	comparer<T> compare;
+	comparer compare;
 public:
 	Set(): head(new Node(T())), _size(0) { }
 	Set(const Set<T, comparer>& other): head(new Node(T())), _size(other._size)
@@ -93,29 +92,51 @@ public:
 		for (int i = 0; i < _size; ++i, curr = curr->next) arr[i] = curr->value;
 		return arr;
 	}
+	class Iterator
+	{
+	private:
+		Node* ptr;
+	public:
+		Iterator(Node* p = nullptr) : ptr(p) {}
+		bool operator==(const Iterator& other) const
+		{
+			return this->ptr == other.ptr;
+		}
+		bool operator!=(const Iterator& other) const
+		{
+			return this->ptr != other.ptr;
+		}
+		Iterator& operator++()
+		{
+			ptr = ptr->next;
+			return *this;
+		}
+		T operator*() const { return ptr->value; }
+	};
+	Iterator begin() { return Iterator(head->next); }
+	Iterator end() { return Iterator(); }
 };
 
-template <typename T,
-	template <typename T> typename comparer = std::less>
+template <typename T, typename comparer = std::less<T>>
 std::ostream& operator<<(std::ostream& os, const Set<T, comparer>& S)
 {
 	S.printOn(os);
 	return os;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer>::Set(T* arr, int n): head(new Node(T())), _size(0)
 {
 	for (int i = 0; i < n; ++i) this->add(arr[i]);
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer>& Set<T, comparer>::operator=(const Set<T, comparer>& other)
 {
 	return *this;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer>& Set<T, comparer>::add(const T& x)
 {
 	Node* curr = head;
@@ -129,7 +150,7 @@ inline Set<T, comparer>& Set<T, comparer>::add(const T& x)
 	return *this;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer>& Set<T, comparer>::remove(const T& x)
 {
 	Node* curr = head;
@@ -144,7 +165,7 @@ inline Set<T, comparer>& Set<T, comparer>::remove(const T& x)
 	return *this;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer> Set<T, comparer>::set_union(const Set<T, comparer>& other)
 {
 	Set<T, comparer> C;
@@ -189,7 +210,7 @@ inline Set<T, comparer> Set<T, comparer>::set_union(const Set<T, comparer>& othe
 	return C;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer> Set<T, comparer>::intersect(const Set<T, comparer>& other)
 {
 	Set<T, comparer> C;
@@ -212,7 +233,7 @@ inline Set<T, comparer> Set<T, comparer>::intersect(const Set<T, comparer>& othe
 	return C;
 }
 
-template <typename T, template <typename T> typename comparer>
+template <typename T, typename comparer>
 inline Set<T, comparer> Set<T, comparer>::difference(const Set<T, comparer>& other)
 {
 	Set<T, comparer> C;
