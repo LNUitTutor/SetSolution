@@ -23,9 +23,19 @@ void PrintSingleLetters(std::string word);
 // Асортимент = множина продуктів, наявних у магазині;
 // Магазини – сукупність асортиментів.
 
-enum class Product { bread, butter, milk, cheese, meat, fish, salt, sugar, tea, coffee, water };
+enum class Product { bread, butter, milk, cheese, meat, fish, salt, sugar, tea, coffee, water, caviar
+};
 using Assortment = Set<Product>;
-const int n = 10;
+const int n = 5;
 using Shops = Assortment[n];
 
 std::ostream& operator<<(std::ostream& os, Product pr);
+
+//Знайдіть продукти, які є в кожному магазині. 
+Assortment PresentEverywhere(Shops s);
+
+//Знайдіть продукти, які є хоча б в одному магазині.
+Assortment PresentSomewhere(Shops s);
+
+//Знайдіть продукти, які відсутні в усіх магазинах.
+Assortment Absent(Shops s);

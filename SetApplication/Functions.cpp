@@ -172,3 +172,35 @@ void PrintSingleLetters(std::string word)
         std::cout << ' ' << *it;
     std::cout << '\n' << unique << '\n';
 }
+
+std::ostream& operator<<(std::ostream& os, Product pr)
+{
+    std::string product_name[] = { "bread", "butter", "milk", "cheese",
+        "meat", "fish", "salt", "sugar", "tea", "coffee", "water", "caviar"};
+    os << product_name[(int)pr];
+    return os;
+}
+
+Assortment PresentEverywhere(Shops s)
+{
+    Assortment everywhere(s[0]);
+    for (int i = 1; i < n; ++i) everywhere = everywhere.intersect(s[i]);
+    return everywhere;
+}
+
+Assortment PresentSomewhere(Shops s)
+{
+    Assortment somewhere(s[0]);
+    for (int i = 1; i < n; ++i) somewhere = somewhere.set_union(s[i]);
+    return somewhere;
+}
+
+Assortment Absent(Shops s)
+{
+    Assortment absent{ Product::bread, Product::butter, Product::milk,
+        Product::cheese, Product::meat, Product::fish, Product::salt,
+        Product::sugar, Product::tea, Product::coffee, Product::water,
+        Product::caviar };
+    for (int i = 0; i < n; ++i) absent = absent.difference(s[i]);
+    return absent;
+}
