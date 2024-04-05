@@ -162,6 +162,7 @@ inline Set<T>& Set<T>::operator=(const Set<T>& other)
 			curr_this = curr_this->next;
 			curr_other = curr_other->next;
 		}
+		this->_size = other._size;
 	}
 	return *this;
 }
