@@ -134,6 +134,30 @@ inline Set<T>::Set(T* arr, int n): head(new Node(T())), _size(0)
 template<typename T>
 inline Set<T>& Set<T>::operator=(const Set<T>& other)
 {
+	if (this != &other)
+	{
+		Node* curr_this = this->head;
+		Node* curr_other = other.head->next;
+		while (curr_this->next != nullptr && curr_other != nullptr)
+		{
+			curr_this->next->value = curr_other->value;
+			curr_this = curr_this->next;
+			curr_other = curr_other->next;
+		}
+		while (curr_this->next != nullptr)
+		{
+			Node* victim = curr_this->next;
+			curr_this->next = curr_this->next->next;
+			delete victim;
+		}
+		while (curr_other != nullptr)
+		{
+			curr_this->next = new Node(curr_other->value);
+			curr_this = curr_this->next;
+			curr_other = curr_other->next;
+		}
+		this->_size = other._size;
+	}
 	return *this;
 }
 
