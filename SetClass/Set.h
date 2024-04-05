@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <stdexcept>
+#include <initializer_list>
 
 template <typename T>
 class Set
@@ -18,6 +19,11 @@ public:
 	Set(): head(new Node(T())), _size(0) { }
 	Set(const Set<T>& other);
 	Set(const T& x): head(new Node(T(), new Node(x))), _size(1){ }
+	Set(const std::initializer_list<T>& list) : head(new Node(T())), _size(0)
+	{
+		for (const T& x : list) this->add(x);
+	}
+
 	~Set()
 	{
 		while (head != nullptr)
