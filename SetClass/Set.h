@@ -102,7 +102,7 @@ public:
 	private:
 		Node* ptr;
 	public:
-		Iterator(Node* p = nullptr) : ptr(p) {}
+		Iterator(Node* p = nullptr): ptr(p) { }
 		bool operator==(const Iterator& other) const
 		{
 			return this->ptr == other.ptr;
