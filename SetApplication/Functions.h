@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <iostream>
+#include "..\SetClass\Set.h"
 
 void TestFirst();
 void TestSecond();
@@ -16,3 +18,14 @@ void PrintMultipleLetters(std::string word);
 
 //Надрукувати усі літери, які зустрічаються тільки один раз: abracadabra --> cd
 void PrintSingleLetters(std::string word);
+
+// Нехай Продукт = { хліб, масло, молоко, сир, м’ясо, риба, сіль, цукор, чай, кава, вода };
+// Асортимент = множина продуктів, наявних у магазині;
+// Магазини – сукупність асортиментів.
+
+enum class Product { bread, butter, milk, cheese, meat, fish, salt, sugar, tea, coffee, water };
+using Assortment = Set<Product>;
+const int n = 10;
+using Shops = Assortment[n];
+
+std::ostream& operator<<(std::ostream& os, Product pr);
