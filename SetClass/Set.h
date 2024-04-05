@@ -1,8 +1,10 @@
 #pragma once
 #include <iostream>
 #include <stdexcept>
+#include <functional>
+#include <initializer_list>
 
-template <typename T>
+template <typename T, typename comparer = std::less<T>>
 class Set
 {
 private:
@@ -14,10 +16,28 @@ private:
 	};
 	Node* head;
 	int _size;
+	comparer compare;
 public:
 	Set(): head(new Node(T())), _size(0) { }
-	Set(const Set<T>& other);
+	Set(const Set<T, comparer>& other): head(new Node(T())), _size(other._size)
+	{
+		if (_size > 0)
+		{
+			Node* curr = head;
+			Node* source = other.head->next;
+			while (source != nullptr)
+			{
+				curr->next = new Node(source->value);
+				curr = curr->next;
+				source = source->next;
+			}
+		}
+	}
 	Set(const T& x): head(new Node(T(), new Node(x))), _size(1){ }
+	Set(const std::initializer_list<T>& list): head(new Node(T())), _size(0)
+	{
+		for (const T& x : list) this->add(x);
+	}
 	~Set()
 	{
 		while (head != nullptr)
@@ -28,15 +48,15 @@ public:
 		}
 	}
 	Set(T* arr, int n);
-	Set<T>& operator=(const Set<T>& other);
-	Set<T>& add(const T& x);
-	Set<T>& addRange(T* arr, int n)
+	Set<T, comparer>& operator=(const Set<T, comparer>& other);
+	Set<T, comparer>& add(const T& x);
+	Set<T, comparer>& addRange(T* arr, int n)
 	{
 		for (int i = 0; i < n; ++i) this->add(arr[i]);
 		return *this;
 	}
-	Set<T>& remove(const T& x);
-	Set<T>& clear()
+	Set<T, comparer>& remove(const T& x);
+	Set<T, comparer>& clear()
 	{
 		Node*& curr = head->next;
 		while (curr != nullptr)
@@ -53,12 +73,12 @@ public:
 	{
 		Node* curr = head->next;
 		while (curr != nullptr && 
-			(curr->value < x || x < curr->value)) curr = curr->next;
+			(compare(curr->value, x) || compare(x, curr->value))) curr = curr->next;
 		return curr != nullptr;
 	}
-	Set<T> set_union(const Set<T>& other);
-	Set<T> intersect(const Set<T>& other);
-	Set<T> difference(const Set<T>& other);
+	Set<T, comparer> set_union(const Set<T, comparer>& other);
+	Set<T, comparer> intersect(const Set<T, comparer>& other);
+	Set<T, comparer> difference(const Set<T, comparer>& other);
 	void printOn(std::ostream& os) const
 	{
 		os << "Set{";
@@ -82,7 +102,7 @@ public:
 	private:
 		Node* ptr;
 	public:
-		Iterator(Node* p = nullptr): ptr(p){}
+		Iterator(Node* p = nullptr): ptr(p) { }
 		bool operator==(const Iterator& other) const
 		{
 			return this->ptr == other.ptr;
@@ -102,37 +122,21 @@ public:
 	Iterator end() { return Iterator(); }
 };
 
-template <typename T>
-std::ostream& operator<<(std::ostream& os, const Set<T>& S)
+template <typename T, typename comparer = std::less<T>>
+std::ostream& operator<<(std::ostream& os, const Set<T, comparer>& S)
 {
 	S.printOn(os);
 	return os;
 }
 
-template<typename T>
-inline Set<T>::Set(const Set<T>& other): head(new Node(T())), _size(other._size)
-{
-	if (_size > 0)
-	{
-		Node* curr = head;
-		Node* source = other.head->next;
-		while (source != nullptr)
-		{
-			curr->next = new Node(source->value);
-			curr = curr->next;
-			source = source->next;
-		}
-	}
-}
-
-template<typename T>
-inline Set<T>::Set(T* arr, int n): head(new Node(T())), _size(0)
+template <typename T, typename comparer>
+inline Set<T, comparer>::Set(T* arr, int n): head(new Node(T())), _size(0)
 {
 	for (int i = 0; i < n; ++i) this->add(arr[i]);
 }
 
-template<typename T>
-inline Set<T>& Set<T>::operator=(const Set<T>& other)
+template <typename T, typename comparer>
+inline Set<T, comparer>& Set<T, comparer>::operator=(const Set<T, comparer>& other)
 {
 	if (this != &other)
 	{
@@ -161,13 +165,13 @@ inline Set<T>& Set<T>::operator=(const Set<T>& other)
 	return *this;
 }
 
-template<typename T>
-inline Set<T>& Set<T>::add(const T& x)
+template <typename T, typename comparer>
+inline Set<T, comparer>& Set<T, comparer>::add(const T& x)
 {
 	Node* curr = head;
-	while (curr->next != nullptr && curr->next->value < x)
+	while (curr->next != nullptr && compare(curr->next->value, x))
 		curr = curr->next;
-	if (curr->next == nullptr || x < curr->next->value)
+	if (curr->next == nullptr || compare(x, curr->next->value))
 	{
 		curr->next = new Node(x, curr->next);
 		++_size;
@@ -175,13 +179,13 @@ inline Set<T>& Set<T>::add(const T& x)
 	return *this;
 }
 
-template<typename T>
-inline Set<T>& Set<T>::remove(const T& x)
+template <typename T, typename comparer>
+inline Set<T, comparer>& Set<T, comparer>::remove(const T& x)
 {
 	Node* curr = head;
-	while (curr->next != nullptr && curr->next->value < x)
+	while (curr->next != nullptr && compare(curr->next->value, x))
 		curr = curr->next;
-	if (curr->next == nullptr || x < curr->next->value)
+	if (curr->next == nullptr || compare(x, curr->next->value))
 		throw std::runtime_error("No such element in the Set");
 	Node* victim = curr->next;
 	curr->next = victim->next;
@@ -190,21 +194,21 @@ inline Set<T>& Set<T>::remove(const T& x)
 	return *this;
 }
 
-template<typename T>
-inline Set<T> Set<T>::set_union(const Set<T>& other)
+template <typename T, typename comparer>
+inline Set<T, comparer> Set<T, comparer>::set_union(const Set<T, comparer>& other)
 {
-	Set<T> C;
+	Set<T, comparer> C;
 	Node* c = C.head;
 	Node* a = this->head->next;
 	Node* b = other.head->next;
 	while (a != nullptr && b != nullptr)
 	{
-		if (a->value < b->value)
+		if (compare(a->value, b->value))
 		{
 			c->next = new Node(a->value);
 			a = a->next;
 		}
-		else if (b->value < a->value)
+		else if (compare(b->value, a->value))
 		{
 			c->next = new Node(b->value);
 			b = b->next;
@@ -235,17 +239,17 @@ inline Set<T> Set<T>::set_union(const Set<T>& other)
 	return C;
 }
 
-template<typename T>
-inline Set<T> Set<T>::intersect(const Set<T>& other)
+template <typename T, typename comparer>
+inline Set<T, comparer> Set<T, comparer>::intersect(const Set<T, comparer>& other)
 {
-	Set<T> C;
+	Set<T, comparer> C;
 	Node* c = C.head;
 	Node* a = this->head->next;
 	Node* b = other.head->next;
 	while (a != nullptr && b != nullptr)
 	{
-		if (a->value < b->value) a = a->next;
-		else if (b->value < a->value) b = b->next;
+		if (compare(a->value, b->value)) a = a->next;
+		else if (compare(b->value, a->value)) b = b->next;
 		else
 		{
 			c->next = new Node(a->value);
@@ -258,23 +262,23 @@ inline Set<T> Set<T>::intersect(const Set<T>& other)
 	return C;
 }
 
-template<typename T>
-inline Set<T> Set<T>::difference(const Set<T>& other)
+template <typename T, typename comparer>
+inline Set<T, comparer> Set<T, comparer>::difference(const Set<T, comparer>& other)
 {
-	Set<T> C;
+	Set<T, comparer> C;
 	Node* c = C.head;
 	Node* a = this->head->next;
 	Node* b = other.head->next;
 	while (a != nullptr && b != nullptr)
 	{
-		if (a->value < b->value)
+		if (compare(a->value, b->value))
 		{
 			c->next = new Node(a->value);
 			a = a->next;
 			c = c->next;
 			++C._size;
 		}
-		else if (b->value < a->value)
+		else if (compare(b->value, a->value))
 		{
 			b = b->next;
 		}

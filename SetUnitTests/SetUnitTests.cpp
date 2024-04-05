@@ -71,6 +71,13 @@ namespace SetUnitTests
 			Assert::IsTrue(AreEqual(b, e, 5));
 			delete[] e;
 		}
+		TEST_METHOD(TestInitlistCreation)
+		{
+			Set<int> A{ 1,2,3,4,5,4,3,2,1 };
+			Assert::AreEqual(5, A.size());
+			int* a = A.to_array();
+			for (int i = 0; i < 5; ++i) Assert::AreEqual(i + 1, a[i]);
+		}
 	};
 	TEST_CLASS(SetAddRemoveTests)
 	{
@@ -141,6 +148,27 @@ namespace SetUnitTests
 			Assert::AreEqual(2, A.size());
 			Assert::IsTrue(A.contain(1.5));
 			Assert::IsTrue(A.contain(2.25));
+		}
+		TEST_METHOD(TestAssignment)
+		{
+			Set<int> A{ 1,2,3,4,5 };
+			Set<int> B(6);
+			Assert::AreEqual(1, B.size());
+			Assert::IsTrue(B.contain(6));
+			Assert::IsFalse(B.contain(3));
+			B = A;
+			Assert::AreEqual(A.size(), B.size());
+			int* a = A.to_array();
+			int* b = B.to_array();
+			AreEqual(a, b, A.size());
+			delete[] a; delete[] b;
+			A.remove(2).remove(4);
+			B = A;
+			Assert::AreEqual(A.size(), B.size());
+			a = A.to_array();
+			b = B.to_array();
+			AreEqual(a, b, A.size());
+			delete[] a; delete[] b;
 		}
 	};
 	TEST_CLASS(TestOperation)
@@ -234,6 +262,24 @@ namespace SetUnitTests
 			B.add("Hello").add("World").add("We").add("Are").add("Going");
 			B.printOn(os);
 			Assert::AreEqual("Set{ Are Going Hello We World }", os.str().c_str());
+		}
+	};
+	TEST_CLASS(SetIteratorTest)
+	{
+		TEST_METHOD(TestIteratorEmpty)
+		{
+			Set<char> A;
+			Set<char>::Iterator it = A.begin();
+			Assert::IsTrue(A.end() == it);
+		}
+		TEST_METHOD(TestIterator)
+		{
+			Set<int> A;
+			const int n = 10;
+			for (int i = 1; i <= n; ++i) A.add(i);
+			Set<int>::Iterator it = A.begin();
+			for (int i = 1; i <= n; ++i, ++it) Assert::AreEqual(i, *it);
+			Assert::IsTrue(A.end() == it);
 		}
 	};
 }
