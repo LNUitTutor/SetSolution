@@ -149,6 +149,27 @@ namespace SetUnitTests
 			Assert::IsTrue(A.contain(1.5));
 			Assert::IsTrue(A.contain(2.25));
 		}
+		TEST_METHOD(TestAssignment)
+		{
+			Set<int> A{ 1,2,3,4,5 };
+			Set<int> B(6);
+			Assert::AreEqual(1, B.size());
+			Assert::IsTrue(B.contain(6));
+			Assert::IsFalse(B.contain(3));
+			B = A;
+			Assert::AreEqual(A.size(), B.size());
+			int* a = A.to_array();
+			int* b = B.to_array();
+			AreEqual(a, b, A.size());
+			delete[] a; delete[] b;
+			A.remove(2).remove(4);
+			B = A;
+			Assert::AreEqual(A.size(), B.size());
+			a = A.to_array();
+			b = B.to_array();
+			AreEqual(a, b, A.size());
+			delete[] a; delete[] b;
+		}
 	};
 	TEST_CLASS(TestOperation)
 	{
