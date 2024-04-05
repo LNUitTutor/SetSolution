@@ -19,7 +19,7 @@ int main()
 void TestFirst()
 {
     int a[5] = {1, 8, 1, 5, 0};
-    Set<int> A(a, 5);
+    Set<int, std::greater<int>> A(a, 5);
     std::cout << " A = " << A << " has size " << A.size() << '\n';
     int* d = A.to_array();
     for (int i = 0; i < A.size(); ++i) std::cout << ' ' << d[i];
@@ -61,8 +61,8 @@ void TestFirst()
     for (int i = 1; i <= 10; ++i) std::cout << e[i - 1];
     std::cout << '\n';
     delete[] e;
-    Set<int>::Iterator start = C1.begin();
-    Set<int>::Iterator stop = C1.end();
+    Set<int, std::greater<int>>::Iterator start = C1.begin();
+    Set<int, std::greater<int>>::Iterator stop = C1.end();
     while (start != stop)
     {
         std::cout << *start << ' ';
