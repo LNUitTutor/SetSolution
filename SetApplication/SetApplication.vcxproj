@@ -139,12 +139,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="SetApplication.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SetClass\SetClass.vcxproj">
       <Project>{c1b069dd-71c8-42d0-a4c7-5d38c5e01ed0}</Project>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Functions.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
