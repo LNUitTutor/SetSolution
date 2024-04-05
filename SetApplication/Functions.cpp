@@ -133,3 +133,44 @@ void EratospheneSieve_1()
     std::cout << "prime = " << prime << '\n';
     std::cout << "size = " << prime.size() << '\n';
 }
+
+void PrintFirstEntry(std::string word)
+{
+    std::cout << "\n The given string is: " << word << '\n';
+    Set<char> present;
+    std::cout << " first entries of the letters: ";
+    for (char letter : word)
+        if (!present.contain(letter))
+        {
+            std::cout << letter;
+            present.add(letter);
+        }
+    std::cout << "\n\n";
+}
+
+void PrintMultipleLetters(std::string word)
+{
+    std::cout << "\n The given string is: " << word << '\n';
+    Set<char> first, second;
+    for (char letter : word)
+        if (first.contain(letter)) second.add(letter);
+        else first.add(letter);
+    std::cout << " Letters occured several times are: ";
+    for (Set<char>::Iterator it = second.begin(); it != second.end(); ++it)
+        std::cout << ' ' << *it;
+    std::cout << '\n' << second << '\n';
+}
+
+void PrintSingleLetters(std::string word)
+{
+    std::cout << "\n The given string is: " << word << '\n';
+    Set<char> first, second;
+    for (char letter : word)
+        if (first.contain(letter)) second.add(letter);
+        else first.add(letter);
+    Set<char> unique = first.difference(second);
+    std::cout << " Unique letters are: ";
+    for (Set<char>::Iterator it = unique.begin(); it != unique.end(); ++it)
+        std::cout << ' ' << *it;
+    std::cout << '\n' << unique << '\n';
+}
