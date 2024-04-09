@@ -2,8 +2,8 @@
 
 int main()
 {
-   /* TestFirst();
-    TestSecond();*/
+    TestFirst();
+    /* TestSecond();*/
     /*EratospheneSieve();
     EratospheneSieve_1();*/
     //Задано рядок літер. Надрукувати:

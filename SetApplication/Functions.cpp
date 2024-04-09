@@ -52,6 +52,9 @@ void TestFirst()
         ++start;
     }
     std::cout << '\n';
+    std::cout << "\n Output by range-based for:\n";
+    for (auto x : C1) std::cout << x << ' ';
+    std::cout << '\n';
 }
 void TestSecond()
 {
